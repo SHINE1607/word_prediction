@@ -64,7 +64,7 @@ Above is the forget gate in lstm layer
 _The input gate is responsible for the addition of information to the cell state. This addition of information is basically three-step process as seen from the diagram above._
 
 * Regulatory filter: This is basically very similar to the forget gate and acts as a filter for all the information from h_t-1 and x_t.
-* Creating a vector containing all possible values that can be added (as perceived from h_t-1 and x_t) to the cell state. This is done using the tanh function, which outputs values from -1 to +1.  
+* filter for the current input: Creating a vector containing all possible values that can be added (as perceived from h_t-1 and x_t) to the cell state. This is done using the tanh function, which outputs values from -1 to +1.  
 * Multiplying the value of the regulatory filter (the sigmoid gate) to the created vector (the tanh function) and then adding this useful information to the cell state via addition operation.
 
 #### Output Gates
@@ -76,5 +76,22 @@ Steps in output gate:
 * Making a filter using the values of h_t-1 and x_t, such that it can regulate the values that need to be output from the vector created above. This filter again employs a sigmoid function.
 * Multiplying the value of this regulatory filter to the vector created in step 1, and sending it out as a output and also to the hidden state of the next cell.
 
+Since we are a communnity of pytorch, lets understand how lstm works in pytorch
 
+lets define the terms and move forward:
+  * i<sub>t</sub>: input at time t
+  * h<sub>t</sub>: hidden state or output at time t
+  * c<sub>t</sub>: cell state at time t
+  * f<sub>t</sub>: forget gate output at time t
+  * o<sub>t</sub>: output gate at time t
+  * g<sub>t<sub>: cell gate or filter for the current input
+
+  
+calculations:
+  * i<sub>t</sub> = σ(W<sub>ii</sub>x<sub>t</sub> + b<sub>ii</sub> + W<sub>hi</sub>h<sub>t-1</sub> + b<sub>hi</sub>)[input]
+  * f<sub>t</sub> = σ(W<sub>if</sub>x<sub>t</sub> + b<sub>if</sub> + W<sub>hf</sub>h<sub>t-1</sub> + b<sub>hf</sub>)[forget filter]
+  * g<sub>t</sub> = tanh(W<sub>ig</sub>x<sub>t</sub> + b<sub>ig</sub> + W<sub>hg</sub>h<sub>t-1</sub> + b<sub>hg</sub>)[current input filter]
+  * o<sub>t</sub> = σ(W<sub>io</sub>x<sub>t</sub> + b<sub>io</sub> + W<sub>ho</sub>h<sub>t-1</sub> + b<sub>ho</sub>)[output gate]
+  * c<sub>t</sub> = f<sub>t</sub>*c<sub>t-1</sub>i<sub>t</sub>.g<sub>t</sub>[cell state]
+  * h<sub>t</sub> = o<sub>t</sub>.tanh(c<sub>t</sub>)
 
